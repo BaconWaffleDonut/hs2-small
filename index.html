@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Bacon's Snowglobe</title>
+  <style>
+    /* Reset spacing */
+
+
+.animated-rainbow {
+    font-size: 42px;
+    font-family: Arial Black, Gadget, sans-serif;
+    background: linear-gradient(to left, #f00, #ff2b00, #f50, #ff8000, #fa0, #ffd500, #ff0, #d4ff00, #af0, #80ff00, #5f0, #2bff00, #0f0, #00ff2a, #0f5, #00ff80, #0fa, #00ffd5, #0ff, #00d5ff, #0af, #0080ff, #05f, #002aff, #00f, #2b00ff, #50f, #8000ff, #a0f, #d400ff, #f0f, #ff00d4, #f0a, #ff0080, #f05, #ff002b, #f00);
+    animation: rainbow-move-left-right 5s linear infinite alternate;
+    -webkit-background-clip: text;
+    background-clip: text;
+   -webkit-text-fill-color: transparent;
+}
+@keyframes rainbow-move-left-right {
+    0% {background-position: 0 0    }
+    100% {background-position: -500px 0}
+}
+
+
+    
+    * { 
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      background-image: url('crimbus.jpg');
+      background-repeat: no-repeat;
+      background-size: auto;
+      background-attachment: fixed;
+	    /* Set up flex display */
+	    display: flex;
+	    flex-direction: column;
+	
+	    /* Fill the whole viewport */
+	    width: 100vw;
+	    height: 100vh;
+	    overflow: hidden; /* Hide all overflow */
+	
+	    /* Center the items */
+	    justify-content: center;
+	    align-items: center;
+    }
+
+    #snowglobe{
+      width: 85vmin;
+      height: 85vmin;
+      
+      background: rgb(67, 116, 116);
+
+      border-radius: 100%;
+      overflow: hidden;
+
+      margin: auto;
+
+      box-shadow: 0px 0px 20px 35px #FFFFFF05;
+    }
+
+    #particles{
+      height: 75%;
+      width: 100%;
+    }
+
+    #ground {
+      height: 25%;
+      width: 100%;
+      background: #11752a;
+    }
+    @keyframes shake {
+	    0%,
+	    100% {
+        transform: rotate(0deg);
+	    }
+	
+	      25% {
+          transform: rotate(15deg);
+	      }
+	
+	    50% {
+          transform: rotate(-15deg);
+	      }
+	
+	      75% {
+          transform: rotate(10deg);
+	      }
+}
+
+.shake {
+  animation: shake 1s;
+}
+
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
+
+  <script>
+    // Set the date we're counting down to
+    var countDownDate = new Date("Dec 25, 2024 24:00:00").getTime();
+
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+    
+      // Get today's date and time
+      var now = new Date().getTime();
+
+      // Find the distance between now and the count down date
+      var distance = countDownDate - now;
+
+      // Time calculations for days, hours, minutes and seconds
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      // Output the result in an element with id="demo"
+      document.getElementById("countdown-to-crimbus").innerHTML = days + "d " + hours + "h "
+      + minutes + "m " + seconds + "s ";
+
+      // If the count down is over, write some text 
+      if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("countdown-to-crimbus").innerHTML = "Merry Crimbus";
+      }
+    }, 1000);
+  </script>
+</head>
+
+<body>
+  <div>
+    <div class="animated-rainbow">Time until Christmas is over!</div>
+    <div id="countdown-to-crimbus"/>
+  </div>
+  <div id="snowglobe">
+    <div id="particles"></div>
+    <div id="ground"></div>
+  </div>
+  <script>
+    let globe = document.getElementById("snowglobe");
+
+    let particles;
+
+    function calculateAcceleration(event) {
+      const {x, y, z} = event.accelerationIncludingGravity;
+      const accelerationMagnitude = Math.sqrt(x*x+y*y+z*z);
+      return accelerationMagnitude;
+    }
+
+    function shakeItUp() {
+      particles.play();
+      globe.classList.add("shake")
+      setTimeout(() => {globe.classList.remove("shake")}, 1100)
+    }
+
+    tsParticles.loadJSON('particles', 'particles.json')
+      .then(function () {
+        particles = tsParticles.domItem(0);
+        particles.pause()
+
+      globe.addEventListener('click', () => {
+        shakeItUp()
+      });
+
+      window.addEventListener("devicemotion", (event) => {
+        const acceleration = calculateAcceleration(event);
+        if (acceleration > 23) {
+          shakeItUp()
+        }
+      });
+    });
+  </script>
+</body>
+</html>
